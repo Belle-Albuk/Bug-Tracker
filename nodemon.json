@@ -4,7 +4,7 @@
         ".git",
         "node_modules/**/node_modules"
     ],
-    "verbose": true,
+    "verbose": false,
     "watch": [
         "./views/*",
         "./server.js",
@@ -13,5 +13,5 @@
     "env": {
         "NODE_ENV": "development"
     },
-    "ext": "js,json,css"
+    "ext": "js,json,css,html"
 }
