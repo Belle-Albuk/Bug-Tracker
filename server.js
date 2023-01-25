@@ -83,8 +83,11 @@ myDB(async client => {
     // Log out
     app.route('/account/logout')
         .get((req, res) => {
-            req.logout();
-            res.redirect('/');
+            req.logout((err) => {
+                if (err) {return next(err);}
+                res.redirect('/');
+            });
+            
         });
 
     // Log in if account is authenticated
