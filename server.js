@@ -3,10 +3,10 @@ const express = require('express');
 const app = express();
 const session = require('express-session');
 const passport = require('passport');
-const ObjectId = require('mongodb').ObjectId;
 const myDB = require('./connection');
-const LocalStrategy = require('passport-local');
-const bcrypt = require('bcrypt');
+
+const auth = require('./auth');
+const routes = require('./routes');
 
 app.use('/public', express.static(process.cwd() + '/public'));
 app.use(express.json());
@@ -26,28 +26,8 @@ myDB(async client => {
     const myDataBase = await client.db('bugTracker').collection('users');
     console.log('Dabase connnection called');
 
-    // Save user's id (mongodb) to session (req.session.passport)
-    passport.serializeUser((user, done) => {
-        done(null, user._id);
-    });
-
-    // Get user full profile from DB and attach it to the requests as res.user
-    passport.deserializeUser((id, done) => {
-        myDataBase.findOne({_id: new ObjectId(id)}, (err, doc) => {
-            done(null, doc);
-        });
-    });
-
-    // Set the user authentication Strategy
-    passport.use(new LocalStrategy((username, password, done) => {
-        myDataBase.findOne({username: username}, (err, user) => {
-            console.log(`User ${username} attempted to log in.`);
-            if (err) return done(err);
-            if (!user) return done(null, false);
-            if (!bcrypt.compareSync(password, user.password)) return done(null, false);
-            return done(null, user);
-        });
-    }));
+    auth(app, myDataBase);
+    routes(app, myDataBase);
 
     function ensureAuthenticated(req, res, next) {
         if (req. isAuthenticated()) {
@@ -89,46 +69,6 @@ myDB(async client => {
             });
             
         });
-
-    // Log in if account is authenticated
-    app.route('/account/login').post(passport.authenticate('local', {failureRedirect: '/'}), 
-        (req, res) => {
-            res.redirect('/profile')
-        }
-    );
-
-    // Register new user
-    app.route('/account/register')
-        .post((req, res, next) => {
-            myDataBase.findOne({username: req.body.username}, (err, user) => {
-                if (err) {
-                    next(err);
-                } else if (user) {
-                    res.redirect('/');
-                } else {
-                    const hash = bcrypt.hashSync(req.body.password, 12);
-                    myDataBase.insertOne({
-                        username: req.body.username,
-                        password: hash
-                    }, 
-                       async (err, doc) => {
-                            if (err) {
-                                res.redirect('/');
-                            } else {                                
-                                const options = {
-                                    projection: {_id: 0}
-                                };
-                                const query = await myDataBase.findOne({_id: doc.insertedId}, options);                                
-                                next(null, query);
-                            }
-                        })                    
-                }
-            })
-        }, passport.authenticate('local', {failureRedirect: '/'}),
-            (req, res, next) => {
-                res.redirect('/profile');
-            }
-        );
 
     app.use((req, res, next) => {
         res.status(404)
