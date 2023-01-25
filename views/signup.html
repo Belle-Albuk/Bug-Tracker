@@ -17,12 +17,13 @@
         <p class="btn-text"><b>Sign up with google</b></p>
       </div>
       <p>Or</p>
-    <form>
-        <label for="uname">Username:</label>
-        <input type="text" id="uname" name="uname">
+    <form action="/register" method="post">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username">
         <label for="password">Password:</label>
         <input type="text" id="password" name="password">
-        <button type="button">Next</button>
+        <input type="submit" value="Sign up">
     </form>
+    <p>Have an account? <a href="/login">Log in now</a></p>
 </body>
 </html>
