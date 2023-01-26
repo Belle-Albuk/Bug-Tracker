@@ -1,8 +1,8 @@
 const passport = require('passport');
 const bcrypt = require('bcrypt');
 
-module.exports = function(app, myDataBase) {
-        // Log in if account is authenticated
+module.exports = function(app, userDatabase, bugDatabase) {
+    // Log in if account is authenticated
         app.route('/account/login').post(passport.authenticate('local', {failureRedirect: '/'}), 
         (req, res) => {
             res.redirect('/profile')
@@ -12,14 +12,14 @@ module.exports = function(app, myDataBase) {
     // Register new user
     app.route('/account/register')
         .post((req, res, next) => {
-            myDataBase.findOne({username: req.body.username}, (err, user) => {
+            userDatabase.findOne({username: req.body.username}, (err, user) => {
                 if (err) {
                     next(err);
                 } else if (user) {
                     res.redirect('/');
                 } else {
                     const hash = bcrypt.hashSync(req.body.password, 12);
-                    myDataBase.insertOne({
+                    userDatabase.insertOne({
                         username: req.body.username,
                         password: hash
                     }, 
@@ -30,7 +30,7 @@ module.exports = function(app, myDataBase) {
                                 const options = {
                                     projection: {_id: 0}
                                 };
-                                const query = await myDataBase.findOne({_id: doc.insertedId}, options);                                
+                                const query = await userDatabase.findOne({_id: doc.insertedId}, options);                                
                                 next(null, query);
                             }
                         })                    
@@ -41,5 +41,18 @@ module.exports = function(app, myDataBase) {
                 res.redirect('/profile');
             }
         );
+
+    // Sign up/Log in with a Google account
+    app.get('/auth/google',
+        passport.authenticate('google', {scope: ['profile']})
+    );
+
+    app.get('/google/callback',
+        passport.authenticate('google', {failureRedirect: '/'}),
+        function(req, res) {
+            // Successful authentication
+            res.redirect('/profile');
+        }
+    );
 
 }

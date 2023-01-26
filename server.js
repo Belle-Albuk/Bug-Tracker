@@ -23,11 +23,12 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 myDB(async client => {
-    const myDataBase = await client.db('bugTracker').collection('users');
-    console.log('Dabase connnection called');
+    const userDatabase = await client.db('bugTracker-session-authentication').collection('users');
+    const bugDatabase = await client.db('bugTracker-session-authentication').collection('bug');
+    console.log('Database connnection called');
 
-    auth(app, myDataBase);
-    routes(app, myDataBase);
+    auth(userDatabase);
+    routes(app, userDatabase, bugDatabase);
 
     function ensureAuthenticated(req, res, next) {
         if (req. isAuthenticated()) {
