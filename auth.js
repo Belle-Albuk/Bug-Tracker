@@ -30,8 +30,8 @@ module.exports = function(userDatabase) {
 
     // Set the google oauth authentication Strategy
     passport.use(new GoogleStrategy({
-        clientID: '318479998696-q1q8j6oc3a4mu9m7f6qurard1f73g8n3.apps.googleusercontent.com',
-        clientSecret: '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',
+        clientID: process.env.CLIENT_ID,
+        clientSecret: process.env.CLIENT_SECRET,
         scope: 'https://www.googleapis.com/auth/userinfo.profile',
         callbackURL: 'http://localhost:3000/google/callback'
     },
@@ -46,7 +46,6 @@ module.exports = function(userDatabase) {
                         created_on: new Date()
                     }, async (err, newUser) => {
                         const newId = newUser.insertedId;
-                        console.log(newId);
                         await userDatabase.findOne({_id: newId}, (err, newUser) => {
                             return cb(null, newUser);
                         });
