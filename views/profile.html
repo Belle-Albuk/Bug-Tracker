@@ -17,15 +17,27 @@
       </ul>
     </nav>
     <h2 id="submit-a-bug">Submit a Bug</h2>
-    <form action="" method="post">
-      <label for="title">Title:</label>
+    <form id="newBug" action="/profile/api" method="post">
+      <label for="title">Title*:</label>
       <input type="text" id="title" name="title"><br>
-      <label for="description">Description:</label>
+      <label for="description">Description*:</label>
       <textarea id="description" name="description"></textarea><br>
+      <label for="assigned_to">Assigned to:</label>
+      <input type="text" id="assigned_to" name="assigned_to"><br>
+      <label for="priority">Priority:</label>
+      <select name="priority" id="priority">
+        <option value="" disabled selected>Bug priority</option>
+        <option value="urgent">Urgent</option>
+        <option value="medium">Medium</option>
+        <option value="low">Low</option>
+      </select>
+      <br>
       <input type="submit" value="Submit">
     </form>
     <h2 id="view-bugs">View Bugs</h2>
     <ul id="bug-list"></ul>
     <a href="/account/logout">Logout</a>
+
+    <script src="https://code.jquery.com/jquery-3.6.3.js" integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
 </body>
 </html>

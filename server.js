@@ -6,7 +6,8 @@ const passport = require('passport');
 const myDB = require('./connection');
 
 const auth = require('./auth');
-const routes = require('./routes');
+const routes = require('./routes/routes');
+const api = require('./routes/api');
 
 app.use('/public', express.static(process.cwd() + '/public'));
 app.use(express.json());
@@ -28,7 +29,8 @@ myDB(async client => {
     console.log('Database connnection called');
 
     auth(userDatabase);
-    routes(app, userDatabase, bugDatabase);
+    routes(app, userDatabase);
+    api(app, userDatabase, bugDatabase);
 
     function ensureAuthenticated(req, res, next) {
         if (req. isAuthenticated()) {
