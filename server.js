@@ -3,8 +3,9 @@ const express = require('express');
 const app = express();
 const session = require('express-session');
 const passport = require('passport');
-const myDB = require('./connection');
+const MongoStore = require('connect-mongo');
 
+const myDB = require('./connection');
 const auth = require('./auth');
 const routes = require('./routes/routes');
 const api = require('./routes/api');
@@ -13,11 +14,14 @@ app.use('/public', express.static(process.cwd() + '/public'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+const store = MongoStore.create({mongoUrl: process.env.MONGO_URI})
+
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: true,
     saveUninitialized: true,
-    cookie: {secure: false}
+    cookie: {secure: false},
+    store: store
 }))
 
 app.use(passport.initialize());
