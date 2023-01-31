@@ -44,6 +44,23 @@ module.exports = (app, userDatabase, bugDatabase) => {
 
     // Update bug
 
+    // Close bug issue
+    app.route('/profile/api/:id')
+        .put(async (req, res) => {
+            const _id = req.params.id;
+            const filter = {_id: new ObjectId(_id)};
+            const updatedDoc = {
+                $set: {open: false}
+            };
+            await bugDatabase.updateOne(filter, updatedDoc, (err, doc) => {
+                if (err || doc.modifiedCount === 0) {
+                    res.json({error: 'could not update', '_id': _id});
+                } else {
+                    res.json({result: 'successfully updated', '_id': _id});
+                }
+            })
+        })
+
     // DELETE method
     app.route('/profile/api/:id')
         .delete(async (req, res) => {

@@ -119,6 +119,15 @@
         });
         e.preventDefault(); 
       })
+      $('#bugList').on('click', '.closeIssue', function(e) {
+        let url = "/profile/api/" + $(this).attr('id');
+        $.ajax({
+          type: "PUT",
+          url: url,
+          success: function(data) {window.location.reload(true);}
+        });
+        e.preventDefault();
+      })
     </script>
 </body>
 </html>

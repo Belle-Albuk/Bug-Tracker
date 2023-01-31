@@ -116,7 +116,6 @@ body {
       display: flex;
       flex-direction: column;
       align-self: stretch;
-      background-color: aqua;
     }
 
     .bug-issue {
