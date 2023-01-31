@@ -1,5 +1,16 @@
+let ObjectId = require('mongodb').ObjectId;
+
 module.exports = (app, userDatabase, bugDatabase) => {
     // GET method
+    app.route('/profile/api')
+        .get(async (req, res) => {
+            const user_id = req.session.user_id;
+            const pipeline = [
+                {$match: {user_id: user_id}}
+            ]
+            const query = bugDatabase.aggregate(pipeline);
+            res.send(await query.toArray());                                    
+        })
 
     // POST method
     app.route('/profile/api')
@@ -34,4 +45,14 @@ module.exports = (app, userDatabase, bugDatabase) => {
     // Update bug
 
     // DELETE method
+    app.route('/profile/api/:id')
+        .delete(async (req, res) => {
+            const _id = req.params.id;
+            const result = await bugDatabase.deleteOne({_id: new ObjectId(_id)});
+            if (result.deletedCount === 1) {
+                res.json({result: 'successfully deleted', '_id': _id});
+            } else {
+                res.json({error: 'could not delete', '_id': _id});
+            }
+        })
 }

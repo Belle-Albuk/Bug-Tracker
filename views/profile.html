@@ -34,10 +34,91 @@
       <br>
       <input type="submit" value="Submit">
     </form>
-    <h2 id="view-bugs">View Bugs</h2>
-    <ul id="bug-list"></ul>
+    <code id="jsonResult"></code>
+    <div id="view-bugs">      
+    <h2>View Bugs</h2>
+    <div id="find-sort">
+      <a href="#">Filter by</a>
+      <a href="#">Sort by</a>
+    </div>
+    <div id='bugList'></div>
+  </div>
     <a href="/account/logout">Logout</a>
 
     <script src="https://code.jquery.com/jquery-3.6.3.js" integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
+    <script>
+      function formatTime(str) {
+	      let month = {
+    	    Jan: '01',
+      	  Feb: '02',
+      	  Mar: '03',
+      	  Apr: '04',
+      	  May: '05',
+      	  Jun: '06',
+      	  Jul: '07',
+      	  Aug: '08',
+      	  Sep: '09',
+      	  Oct: '10',
+      	  Nov: '11',
+      	  Dec: '12'
+        };
+  
+        let strMonth = month[str.slice(4, 7)];
+        const newStr = `${str.slice(8,10)}/${strMonth}/${str.slice(11,15)} ${str.slice(15,21)}`;
+  
+        return newStr
+      }
+      // Stringfy json response after data submission
+      $(function() {
+        $('#newBug').submit(function(e) {
+          $.ajax({
+            url: '/profile/api',
+            type: 'post',
+            data: $('#newBug').serialize(),
+            success: function(data) {
+              $('#jsonResult').text(JSON.stringify(data));
+            }
+          });
+          e.preventDefault();
+        })
+      })
+      // GET all the submitted bugs
+      $(function() {
+        $.ajax({
+          type: "GET",
+          url: "/profile/api",
+          success: function(data) {
+            let issues = [];
+            data.forEach(function(element) {
+              console.log(element);
+              (element.open) ? openStatus = 'open' : openStatus = 'closed';
+              let priority = element.priority.charAt(0).toUpperCase() + element.priority.slice(1);
+              let single = [
+                '<div class="bug-issue '+openStatus+'">',
+                  '<h3>'+element.bug_title+' - ('+openStatus+')</h3>',
+                  '<br>',
+                  '<p>'+element.bug_description+'</p>',
+                  '<p class="priority-'+element.priority+'"><b>Priority:</b> '+priority+'</p>',
+                  '<p><b>Created by:</b> '+element.created_by+'       <b>Assigned to:</b> '+element.assigned_to+'</p>',
+                  '<p><b>Created on:</b> '+formatTime(element.created_on)+'       <b>Last updated:</b> '+formatTime(element.updated_on)+'</p><br>',
+                  '<a href="#" class="closeIssue" id="'+element._id+'">Close?</a> <a href="#" class="deleteIssue" id="'+element._id+'">Delete?</a>',
+                  '</div>'
+              ];
+              issues.push(single.join(''));
+            });
+            $('#bugList').html(issues.join(''));
+          }
+        })
+      })
+      $('#bugList').on('click', '.deleteIssue', function(e) {
+        let url = "/profile/api/" + $(this).attr('id');
+        $.ajax({
+          type: "DELETE",
+          url: url,
+          success: function(data) {window.location.reload(true);}
+        });
+        e.preventDefault(); 
+      })
+    </script>
 </body>
 </html>

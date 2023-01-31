@@ -63,11 +63,6 @@ body {
     border: none;
     cursor: pointer;
   }
-  
-  #bug-list {
-    width: 50%;
-    margin: 20px auto;
-  }
 
   .google-btn {
     width: 184px;
@@ -98,7 +93,7 @@ body {
       color: #fff;
       font-size: 14px;
       letter-spacing: 0.2px;
-      font-family: "Roboto";
+      font-family: 'Roboto', sans-serif;
     }
     .google-btn:hover {
       box-shadow: 0 0 6px #4285f4;
@@ -106,8 +101,30 @@ body {
     .google-btn:active {
       background: #1669F2;
     }
-  
-  @import url(https://fonts.googleapis.com/css?family=Roboto:500);
+
+    #view-bugs {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    #find-sort {
+      align-self: flex-end;
+    }
+
+    #bugList {
+      display: flex;
+      flex-direction: column;
+      align-self: stretch;
+      background-color: aqua;
+    }
+
+    .bug-issue {
+      margin: 20px;
+      padding: 5px 20px;
+      width: 60%;
+      border: 1px solid rgb(205, 205, 205);
+    }
 
 /* Mobile devices (portrait) */
 @media screen and (max-width: 480px) {
