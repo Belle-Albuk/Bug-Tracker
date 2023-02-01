@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bug Tracker Profile</title>
     <link rel="stylesheet" type="text/css" href="../public/style.css">
-
+    <script src="https://kit.fontawesome.com/02fd43601a.js" crossorigin="anonymous"></script>
 </head>
 <body>
     <h1>Welcome to the Bug Tracker</h1>
@@ -38,8 +38,18 @@
     <div id="view-bugs">      
     <h2>View Bugs</h2>
     <div id="find-sort">
-      <a href="#">Filter by</a>
-      <a href="#">Sort by</a>
+      <input type="text" id="search" placeholder="Search for bugs..." title="">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <div id="sort">
+        <a class="sort-btn" href="javascript:void(0)">Sort by
+          <i class="fa-solid fa-chevron-down sort-btn"></i></a>
+          <div id="myDropdown" class="dropdown-content">
+            <a class="sort-option" name="priority" href="javascript:void(0)">Priority</a>
+            <a class="sort-option" name="recent" href="javascript:void(0)">Recent</a>
+            <a class="sort-option" name="oldest" href="javascript:void(0)">Oldest</a>
+            <a class="sort-option" name="update" href="javascript:void(0)">Update</a>
+          </div>
+      </div>
     </div>
     <div id='bugList'></div>
   </div>
@@ -47,6 +57,7 @@
 
     <script src="https://code.jquery.com/jquery-3.6.3.js" integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
     <script>
+      let url = '/profile/api'
       function formatTime(str) {
 	      let month = {
     	    Jan: '01',
@@ -82,15 +93,46 @@
           e.preventDefault();
         })
       })
+
+      // Sorting bugs
+      $('.sort-option').on('click', function(e) {
+        url = url + '?sort=' + $(this).attr('name');
+        $.ajax({
+          type: "GET",
+          url: url,
+          success: function(data) {
+            url = '/profile/api';
+            let issues = [];
+            data.forEach(function(element) {
+              (element.open) ? openStatus = 'open' : openStatus = 'closed';
+              let priority = element.priority.charAt(0).toUpperCase() + element.priority.slice(1);
+              let single = [
+                '<div class="bug-issue '+openStatus+'">',
+                  '<h3>'+element.bug_title+' - ('+openStatus+')</h3>',
+                  '<br>',
+                  '<p>'+element.bug_description+'</p>',
+                  '<p class="priority-'+element.priority+'"><b>Priority:</b> '+priority+'</p>',
+                  '<p><b>Created by:</b> '+element.created_by+'       <b>Assigned to:</b> '+element.assigned_to+'</p>',
+                  '<p><b>Created on:</b> '+formatTime(element.created_on)+'       <b>Last updated:</b> '+formatTime(element.updated_on)+'</p><br>',
+                  '<a href="#" class="closeIssue" id="'+element._id+'">Close?</a> <a href="#" class="deleteIssue" id="'+element._id+'">Delete?</a>',
+                  '</div>'
+              ];
+              issues.push(single.join(''));
+            });
+            $('#bugList').html(issues.join(''));
+            return url;
+          }
+        })
+      })
+
       // GET all the submitted bugs
       $(function() {
         $.ajax({
           type: "GET",
-          url: "/profile/api",
+          url: url,
           success: function(data) {
             let issues = [];
             data.forEach(function(element) {
-              console.log(element);
               (element.open) ? openStatus = 'open' : openStatus = 'closed';
               let priority = element.priority.charAt(0).toUpperCase() + element.priority.slice(1);
               let single = [
@@ -127,6 +169,14 @@
           success: function(data) {window.location.reload(true);}
         });
         e.preventDefault();
+      })
+
+      // Show and hide sort dropdown
+      $(window).on('click', function(event) {
+        const e = event.target;
+        if ((!$('#myDropdown').hasClass('show') && $(e).hasClass('sort-btn')) || ($('#myDropdown').hasClass('show') && !$(e).hasClass('sort-option'))) {
+          $('#myDropdown').toggleClass('show');
+        }
       })
     </script>
 </body>

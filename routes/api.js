@@ -3,13 +3,24 @@ let ObjectId = require('mongodb').ObjectId;
 module.exports = (app, userDatabase, bugDatabase) => {
     // GET method
     app.route('/profile/api')
-        .get(async (req, res) => {
+        .get(async (req, res) => {            
             const user_id = req.session.user_id;
+            if (req.query.sort) {
+                const order = ['urgent', 'medium', 'low'];
+                const match = {$match: {user_id: user_id}};
+                const set = {$set: {order: {$indexOfArray: [order, '$priority']}}};
+                const sort = {$sort: {order: 1}}
+                const pipeline = [match, set, sort];
+
+                const query = bugDatabase.aggregate(pipeline);
+                res.send(await query.toArray());
+            } else {
             const pipeline = [
                 {$match: {user_id: user_id}}
             ]
             const query = bugDatabase.aggregate(pipeline);
-            res.send(await query.toArray());                                    
+            res.send(await query.toArray());
+            }                                    
         })
 
     // POST method
