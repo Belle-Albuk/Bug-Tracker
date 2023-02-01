@@ -3,7 +3,7 @@ let ObjectId = require('mongodb').ObjectId;
 module.exports = (app, userDatabase, bugDatabase) => {
     // GET method
     app.route('/profile/api')
-        .get(async (req, res) => {            
+        .get(async (req, res) => {      
             const user_id = req.session.user_id;
             const sortQuery = req.query.sort;
             if (sortQuery) {                
@@ -12,7 +12,7 @@ module.exports = (app, userDatabase, bugDatabase) => {
                 let pipeline = [];
                 switch (sortQuery) {
                     case 'priority':
-                        const order = ['urgent', 'medium', 'low'];
+                        const order = ['urgent', 'medium', 'low', null];
                         const set = {$set: {order: {$indexOfArray: [order, '$priority']}}};
                         sort = {$sort: {order: 1}};
                         pipeline = [match, set, sort];

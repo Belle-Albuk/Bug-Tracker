@@ -34,7 +34,6 @@
       <br>
       <input type="submit" value="Submit">
     </form>
-    <code id="jsonResult"></code>
     <div id="view-bugs">      
     <h2>View Bugs</h2>
     <div id="find-sort">
@@ -79,16 +78,14 @@
   
         return newStr
       }
-      // Stringfy json response after data submission
+      // Post new bug issue
       $(function() {
         $('#newBug').submit(function(e) {
           $.ajax({
             url: '/profile/api',
             type: 'post',
             data: $('#newBug').serialize(),
-            success: function(data) {
-              $('#jsonResult').text(JSON.stringify(data));
-            }
+            success: function(data) {window.location.reload(true);}
           });
           e.preventDefault();
         })
@@ -105,13 +102,13 @@
             let issues = [];
             data.forEach(function(element) {
               (element.open) ? openStatus = 'open' : openStatus = 'closed';
-              let priority = element.priority.charAt(0).toUpperCase() + element.priority.slice(1);
+              (element.priority) ? priority = element.priority.charAt(0).toUpperCase() + element.priority.slice(1) : priority = '';
               let single = [
                 '<div class="bug-issue '+openStatus+'">',
                   '<h3>'+element.bug_title+' - ('+openStatus+')</h3>',
                   '<br>',
                   '<p>'+element.bug_description+'</p>',
-                  '<p class="priority-'+element.priority+'"><b>Priority:</b> '+priority+'</p>',
+                  '<p class="priority '+element.priority+'"><b>Priority:</b> '+priority+'</p>',
                   '<p><b>Created by:</b> '+element.created_by+'       <b>Assigned to:</b> '+element.assigned_to+'</p>',
                   '<p><b>Created on:</b> '+formatTime(element.created_on)+'       <b>Last updated:</b> '+formatTime(element.updated_on)+'</p><br>',
                   '<a href="#" class="closeIssue" id="'+element._id+'">Close?</a> <a href="#" class="deleteIssue" id="'+element._id+'">Delete?</a>',
@@ -134,13 +131,13 @@
             let issues = [];
             data.forEach(function(element) {
               (element.open) ? openStatus = 'open' : openStatus = 'closed';
-              let priority = element.priority.charAt(0).toUpperCase() + element.priority.slice(1);
+              (element.priority) ? priority = element.priority.charAt(0).toUpperCase() + element.priority.slice(1) : priority = '';
               let single = [
                 '<div class="bug-issue '+openStatus+'">',
                   '<h3>'+element.bug_title+' - ('+openStatus+')</h3>',
                   '<br>',
                   '<p>'+element.bug_description+'</p>',
-                  '<p class="priority-'+element.priority+'"><b>Priority:</b> '+priority+'</p>',
+                  '<p class="priority '+element.priority+'"><b>Priority:</b> '+priority+'</p>',
                   '<p><b>Created by:</b> '+element.created_by+'       <b>Assigned to:</b> '+element.assigned_to+'</p>',
                   '<p><b>Created on:</b> '+formatTime(element.created_on)+'       <b>Last updated:</b> '+formatTime(element.updated_on)+'</p><br>',
                   '<a href="#" class="closeIssue" id="'+element._id+'">Close?</a> <a href="#" class="deleteIssue" id="'+element._id+'">Delete?</a>',
