@@ -43,7 +43,7 @@
       <div id="sort">
         <a class="sort-btn" href="javascript:void(0)">Sort by
           <i class="fa-solid fa-chevron-down sort-btn"></i></a>
-          <div id="myDropdown" class="dropdown-content">
+          <div id="dropdown" class="dropdown-content">
             <a class="sort-option" name="priority" href="javascript:void(0)">Priority</a>
             <a class="sort-option" name="recent" href="javascript:void(0)">Recent</a>
             <a class="sort-option" name="oldest" href="javascript:void(0)">Oldest</a>
@@ -174,8 +174,8 @@
       // Show and hide sort dropdown
       $(window).on('click', function(event) {
         const e = event.target;
-        if ((!$('#myDropdown').hasClass('show') && $(e).hasClass('sort-btn')) || ($('#myDropdown').hasClass('show') && !$(e).hasClass('sort-option'))) {
-          $('#myDropdown').toggleClass('show');
+        if ((!$('#dropdown').hasClass('show') && $(e).hasClass('sort-btn')) || ($('#dropdown').hasClass('show') && !$(e).hasClass('sort-option'))) {
+          $('#dropdown').toggleClass('show');
         }
       })
     </script>

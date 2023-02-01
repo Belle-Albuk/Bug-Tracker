@@ -5,18 +5,40 @@ module.exports = (app, userDatabase, bugDatabase) => {
     app.route('/profile/api')
         .get(async (req, res) => {            
             const user_id = req.session.user_id;
-            if (req.query.sort) {
-                const order = ['urgent', 'medium', 'low'];
+            const sortQuery = req.query.sort;
+            if (sortQuery) {                
                 const match = {$match: {user_id: user_id}};
-                const set = {$set: {order: {$indexOfArray: [order, '$priority']}}};
-                const sort = {$sort: {order: 1}}
-                const pipeline = [match, set, sort];
+                let sort = {};
+                let pipeline = [];
+                switch (sortQuery) {
+                    case 'priority':
+                        const order = ['urgent', 'medium', 'low'];
+                        const set = {$set: {order: {$indexOfArray: [order, '$priority']}}};
+                        sort = {$sort: {order: 1}};
+                        pipeline = [match, set, sort];
+                        break;
+                    case 'recent':
+                        sort = {$sort: {created_on: -1}};
+                        pipeline = [match, sort];
+                        break;
+                    case 'oldest':
+                        sort = {$sort: {created_on: 1}};
+                        pipeline = [match, sort];
+                        break;
+                    case 'update':
+                        sort = {$sort: {updated_on: -1}};
+                        pipeline = [match, sort];
+                        break;
+                    default:
+                        console.log('error on sorting');                   
+                }                
 
                 const query = bugDatabase.aggregate(pipeline);
                 res.send(await query.toArray());
             } else {
             const pipeline = [
-                {$match: {user_id: user_id}}
+                {$match: {user_id: user_id}},
+                {$sort: {created_on: -1}}
             ]
             const query = bugDatabase.aggregate(pipeline);
             res.send(await query.toArray());

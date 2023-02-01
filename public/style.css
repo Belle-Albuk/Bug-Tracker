@@ -172,6 +172,12 @@ body {
       flex-direction: column;
     }
 
+    #bugList a{
+      text-decoration: none;
+      font-weight: bold;
+      color: #000;
+    }
+
     .bug-issue {
       margin: 20px;
       padding: 5px 20px;
