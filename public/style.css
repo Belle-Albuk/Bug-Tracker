@@ -179,9 +179,35 @@ body {
     }
 
     .bug-issue {
+      position: relative;
       margin: 20px;
       padding: 5px 20px;
       border: 1px solid rgb(205, 205, 205);
+    }
+
+    #child {
+      margin: 20px;
+      padding: 5px 20px;
+      border: 1px solid rgb(205, 205, 205);
+      background-color: white;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+    }
+
+    #block {
+      display: flex;
+      flex-direction: row;
+      gap: 10px;
+    }
+
+    #edit-nav {
+      font-size: 12px;
+    }
+
+    .left p {
+      margin-top: 0;
     }
 
 /* Mobile devices (portrait) */
