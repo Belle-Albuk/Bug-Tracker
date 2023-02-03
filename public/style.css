@@ -186,12 +186,13 @@ body {
     }
 
     #child {
-      margin: 20px;
-      padding: 5px 20px;
+      padding: 0px;
       border: 1px solid rgb(205, 205, 205);
       background-color: white;
       position: absolute;
-      top: 0;
+      max-height: 110%;
+      width: 150%;
+      top: -15px;
       left: 0;
       z-index: 1;
     }

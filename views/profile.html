@@ -85,7 +85,7 @@
           (element.open) ? openStatus = 'open' : openStatus = 'closed';
           (element.priority) ? priority = element.priority.charAt(0).toUpperCase() + element.priority.slice(1) : priority = '';
           let single = [
-            '<div class="bug-issue '+openStatus+'"><div class="parent">',
+            '<div id="'+element._id+'" class="bug-issue '+openStatus+'"><div class="parent">',
             '<h3>'+element.bug_title+' - ('+openStatus+')</h3>',
             '<br>',
             '<p class="description">'+element.bug_description+'</p>',
@@ -180,41 +180,46 @@
         }
       })
 
-      // Edit bug issues
-      $(document).on('dblclick', '.bug-issue', function() {
-        function findSelectedPriority(elementPriority) {
-            let arr = ['<option value="">Bug priority</option>',
-            '<option value="urgent">Urgent</option>',
-            '<option value="medium">Medium</option>',
-            '<option value="low">Low</option>'
-            ]
-            let newArr = [];
-            if (elementPriority) {
-              for (let i = 0; i < arr.length; i++) {
-            	  if (arr[i].includes(elementPriority)) {
-                	newArr.push(arr[i].slice(0, 7) + ' selected' + arr[i].slice(7));
-                } else {newArr.push(arr[i])}
-              }
-			        return newArr.join("");
-            } else {return arr.join("")}
+      function findSelectedPriority(elementPriority) {
+        let arr = ['<option value="">Bug priority</option>',
+        '<option value="urgent">Urgent</option>',
+        '<option value="medium">Medium</option>',
+        '<option value="low">Low</option>'
+        ]
+        let newArr = [];
+        if (elementPriority) {
+          for (let i = 0; i < arr.length; i++) {
+            if (arr[i].includes(elementPriority)) {
+              newArr.push(arr[i].slice(0, 7) + ' selected' + arr[i].slice(7));
+            } else {newArr.push(arr[i])}
           }
+          return newArr.join("");
+        } else {return arr.join("")}
+      }
 
-          const title = $(this).children('h3').text().match(/^.+?(?= -)/g).join("");
-          
-          let edit = [
-            '<div id="child"><form><div id="edit-nav"><h1>Edit Bug Issue</h1></div>',
-            '<label for="title"><b>Title:</b></label><input type="text" class="title" name="title" value="'+title+'"><br><br><br>',
-            '<label for="description"><b>Description:</b></label><br><textarea class="description" name="description">'+$(this).children('.description').text()+'</textarea><br>',
-            '<label for="priority"><b>Priority:</b></label><select name="priority" id="priority">'+findSelectedPriority($(this).children('.priority').attr('class').split(' ')[0])+'</select>',
-            '<div id="block"><div class="left"><p><b>Created by:</b>'+$(this).children('.created_by').attr('id')+'</p>',
-            '<p><b>Created on:</b> '+$(this).children('.created_on').attr('id')+'</p></div>',
-            '<div class="right"><label for="assigned_to"><b>Assigned to:</b></label><input type="text" name="assigned_to" value="'+$(this).children('.created_by').text().match(/(?<=Assigned to: ).+$/g).join("")+'">',
-            '<p><b>Last updated:</b> '+$(this).children('.created_on').text().match(/(?<=Last updated: ).+$/g).join("")+'</p></div>',
-            '</div><br>',
-            '<button id="cancel" name="cancel">Cancel</button>',
-            '<button id="save" name="save">Save</button></form></div>'
-          ]
-          $(this).append(edit.join(""));
+      // Edit bug issues
+      $(document).on('dblclick', '.bug-issue', function(e) {
+        $.ajax({
+          type: "GET",
+          url: "/profile/api/" + $(this).attr('id'),
+          success: function(issue) {          
+            let edit = [
+              '<div id="child"><form><div id="edit-nav"><h1>Edit Bug Issue</h1></div>',
+              '<label for="title"><b>Title:</b></label><input type="text" class="title" name="title" value="'+issue.bug_title+'"><br><br><br>',
+              '<label for="description"><b>Description:</b></label><br><textarea class="description" name="description">'+issue.bug_description+'</textarea><br>',
+              '<label for="priority"><b>Priority:</b></label><select name="priority" id="priority">'+findSelectedPriority(issue.priority)+'</select>',
+              '<div id="block"><div class="left"><p><b>Created by:</b>'+issue.created_by+'</p>',
+              '<p><b>Created on:</b> '+formatTime(issue.created_on)+'</p></div>',
+              '<div class="right"><label for="assigned_to"><b>Assigned to:</b></label><input type="text" name="assigned_to" value="'+issue.assigned_to+'">',
+              '<p><b>Last updated:</b> '+formatTime(issue.updated_on)+'</p></div>',
+              '</div><br>',
+              '<button id="cancel" name="cancel">Cancel</button>',
+              '<button id="save" name="save">Save</button></form></div>'
+              ]      
+            $('#'+issue._id).append(edit.join(""));
+          }
+        })
+        e.preventDefault();
       })
     </script>
 </body>

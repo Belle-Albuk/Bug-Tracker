@@ -107,6 +107,14 @@ module.exports = (app, userDatabase, bugDatabase) => {
 
     // Update bug
 
+    // Find one bug issue
+    app.route('/profile/api/:id')
+    .get(async (req, res) => {
+        const _id = req.params.id;
+        console.log('called')
+        res.send(await bugDatabase.findOne({_id: new ObjectId(_id)}));
+    })
+
     // Close bug issue
     app.route('/profile/api/:id')
         .put(async (req, res) => {
