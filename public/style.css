@@ -165,8 +165,6 @@ body {
 
     .dropdown-content a:hover {background-color: #ddd;}
 
-    .show {display:block;}
-
     #bugList {
       display: flex;
       flex-direction: column;
@@ -183,33 +181,12 @@ body {
       margin: 20px;
       padding: 5px 20px;
       border: 1px solid rgb(205, 205, 205);
+      -webkit-user-select: none; /* Safari */
+      -ms-user-select: none; /* IE 10 and IE 11 */
+      user-select: none; /* Standard syntax */
     }
 
-    #child {
-      padding: 0px;
-      border: 1px solid rgb(205, 205, 205);
-      background-color: white;
-      position: absolute;
-      max-height: 110%;
-      width: 150%;
-      top: -15px;
-      left: 0;
-      z-index: 1;
-    }
-
-    #block {
-      display: flex;
-      flex-direction: row;
-      gap: 10px;
-    }
-
-    #edit-nav {
-      font-size: 12px;
-    }
-
-    .left p {
-      margin-top: 0;
-    }
+    .show {display:block;}
 
 /* Mobile devices (portrait) */
 @media screen and (max-width: 480px) {
