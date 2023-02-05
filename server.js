@@ -43,16 +43,10 @@ myDB(async client => {
         res.redirect('/')
     };
 
-    // Index page (static HTML)
+    // Index/Log in page (static HTML)
     app.route('/')
         .get(function (req, res) {
             res.sendFile(process.cwd() + '/views/index.html')
-        });
-
-    // Log in page
-    app.route('/login')
-        .get(function (req, res) {
-            res.sendFile(process.cwd() + '/views/login.html')
         });
 
     // Sign up page

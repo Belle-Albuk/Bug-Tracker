@@ -1,106 +1,72 @@
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-  }
-  
-  h1 {
-    text-align: center;
-    margin: 20px 0;
-  }
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
 
-  h2 {
-    text-align: center;
-    margin: 20px 0;
-  }
-  
-  nav {
-    background-color: #f2f2f2;
-    padding: 10px;
-  }
-  
-  nav ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-  }
-  
-  nav ul li {
-    margin: 0 10px;
-  }
-  
-  nav a {
-    text-decoration: none;
-    color: #000;
-  }
-  
-  form {
-    width: 50%;
-    margin: 20px auto;
-    text-align: center;
-  }
-  
-  label {
-    display: block;
-    margin-bottom: 10px;
-  }
-  
-  input[type="text"], textarea {
-    width: 100%;
-    padding: 12px 20px;
-    margin: 8px 0;
-    box-sizing: border-box;
-    border: 1px solid #ccc;
-  }
-  
-  input[type="submit"] {
-    background-color: #4CAF50;
-    color: white;
-    padding: 14px 20px;
-    margin: 8px 0;
-    border: none;
-    cursor: pointer;
-  }
+#register-link {
+  text-decoration: none;
+}
 
-  .google-btn {
-    width: 184px;
-    height: 42px;
-    background-color: #4285f4;
-    border-radius: 2px;
-    box-shadow: 0 3px 4px 0 rgba(0,0,0,.25);
-  }
-    .google-icon-wrapper {
-      position: absolute;
-      margin-top: 1px;
-      margin-left: 1px;
-      width: 40px;
-      height: 40px;
-      border-radius: 2px;
-      background-color: #fff;
-    }
-    .google-icon {
-      position: absolute;
-      margin-top: 11px;
-      margin-left: 11px;
-      width: 18px;
-      height: 18px;
-    }
-    .btn-text {
-      float: right;
-      margin: 11px 11px 0 0;
-      color: #fff;
-      font-size: 14px;
-      letter-spacing: 0.2px;
-      font-family: 'Roboto', sans-serif;
-    }
-    .google-btn:hover {
-      box-shadow: 0 0 6px #4285f4;
-    }
-    .google-btn:active {
-      background: #1669F2;
-    }
+#header-title {
+  text-align: center;
+  margin: 20px 0;
+}
+
+#submit-a-bug {
+  text-align: center;
+  margin: 20px 0;
+}
+
+#header-nav {
+  background-color: #f2f2f2;
+  padding: 10px;
+}
+
+#header-nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+}
+
+#header-nav ul li {
+  margin: 0 10px;
+}
+
+#header-nav a {
+  text-decoration: none;
+  color: #000;
+}
+
+#newBug {
+  width: 50%;
+  margin: 20px auto;
+  text-align: center;
+}
+
+#newBug label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+#newBug input[type="text"], textarea {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+}
+
+#newBug input[type="submit"] {
+  background-color: #4CAF50;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+}
 
     #view-bugs {
       display: flex;
@@ -190,7 +156,7 @@ body {
 
 /* Mobile devices (portrait) */
 @media screen and (max-width: 480px) {
-    form {
+  #newBug {
       width: 90%;
     }
     #bug-list {
@@ -200,7 +166,7 @@ body {
   
   /* Tablets (landscape) */
   @media screen and (min-width: 481px) and (max-width: 768px) {
-    form {
+    #newBug {
       width: 70%;
     }
     #bug-list {
@@ -210,7 +176,7 @@ body {
   
   /* Desktops */
   @media screen and (min-width: 769px) {
-    form {
+    #newBug {
       width: 50%;
     }
     #bug-list {
