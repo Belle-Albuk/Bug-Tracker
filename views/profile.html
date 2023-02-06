@@ -117,7 +117,7 @@
 
           (element.open) ? check = '' : check = ' checked';
           let modal = [
-          '<div id="modal-data" class="modal" tabindex="-1" role="dialog"><div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">Update bug issue</h5><button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>',
+          '<div id="modal-data-'+element._id+'" class="modal" tabindex="-1" role="dialog"><div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">Update bug issue</h5><button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>',
           '<div class="modal-body"><div class="container-fluid"><div class="row g-2 align-items-center"><div class="col-auto"><label for="title"><b>Title:</b></label></div><div class="col-auto"><input type="text" class="title form-control" name="title" value="'+element.bug_title+'"></div></div>',
           '<br><label for="description"><b>Description:</b></label><br><textarea class="description form-control" name="description">'+element.bug_description+'</textarea><br>',
           '<div class="row g-2 align-items-center"><div class="col-auto"><label for="priority"><b>Priority:</b></label></div><div class="col-auto"><select name="priority" id="priority" class="form-select form-select-sm" aria-label=".form-select-sm example">'+findSelectedPriority(element.priority)+'</select></div></div><br>',
@@ -221,7 +221,8 @@
 
       // Edit bug issues
       $(document).on('dblclick', '.bug-issue', function() {
-        $("#modal-data").modal('show');
+        let modalId = '#modal-data-' + $(this).attr('id');
+        $(modalId).modal('show');
       })
     </script>
 </body>
