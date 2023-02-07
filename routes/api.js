@@ -105,8 +105,6 @@ module.exports = (app, userDatabase, bugDatabase) => {
 
         })
 
-    // Update bug
-
     // Find one bug issue
     app.route('/profile/api/:id')
     .get(async (req, res) => {
@@ -115,13 +113,21 @@ module.exports = (app, userDatabase, bugDatabase) => {
         res.send(await bugDatabase.findOne({_id: new ObjectId(_id)}));
     })
 
-    // Close bug issue
+    // Update bug issue
     app.route('/profile/api/:id')
         .put(async (req, res) => {
             const _id = req.params.id;
+            const change = req.body;
             const filter = {_id: new ObjectId(_id)};
             const updatedDoc = {
-                $set: {open: false}
+                $set: {
+                    bug_title: change.title,
+                    bug_description: change.description,
+                    priority: change.priority,
+                    assigned_to: change.assigned_to,
+                    updated_on: new Date().toString(),
+                    open: change.close ? false : true              
+                }
             };
             await bugDatabase.updateOne(filter, updatedDoc, (err, doc) => {
                 if (err || doc.modifiedCount === 0) {
