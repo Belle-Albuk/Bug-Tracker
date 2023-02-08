@@ -8,59 +8,55 @@ module.exports = (app, userDatabase, bugDatabase) => {
             const sortQuery = req.query.sort;
             const searchQuery = req.query.search;
             const regex = /(open|close)/i;
-            if (searchQuery) {
-                const pipeline = {$and: [
-                    {user_id: user_id},
-                    {$or: [
-                        {created_by: {$regex: searchQuery, $options: 'i'}},
-                        {bug_title: {$regex: searchQuery, $options: 'i'}},
-                        {bug_description: {$regex: searchQuery, $options: 'i'}},
-                        {assigned_to: {$regex: searchQuery, $options: 'i'}},
-                        {priority: {$regex: searchQuery, $options: 'i'}},
-                        {open: {$eq: !regex.test(searchQuery) ? undefined : (/open/i.test(searchQuery) ? true : false)}}
-                    ]}
-                    ]
-                };
-                const project = {
-                    $addFields: {
-                    formatedCreated_on: {$dateToString: {format: "%Y/%m/%d %H:%M", date: "$created_on"}},
-                    formatedUpdated_on: {$dateToString: {format: "%Y/%m/%d %H:%M", date: "$updated_on"}}
-                }};
-                const options = {created_on: -1};
+            if (searchQuery || sortQuery) {
+                const pipeline = [{$match: {user_id: user_id}}];
+                if (searchQuery) {
+                    const query = {$match: 
+                        {$or: [
+                            {created_by: {$regex: searchQuery, $options: 'i'}},
+                            {bug_title: {$regex: searchQuery, $options: 'i'}},
+                            {bug_description: {$regex: searchQuery, $options: 'i'}},
+                            {assigned_to: {$regex: searchQuery, $options: 'i'}},
+                            {priority: {$regex: searchQuery, $options: 'i'}},
+                            {open: {$eq: !regex.test(searchQuery) ? undefined : (/open/i.test(searchQuery) ? true : false)}}
+                        ]}
+                        
+                    };
+                    
+                    pipeline.push(query);                    
+                }
+                    const project = {
+                        $addFields: {
+                        formatedCreated_on: {$dateToString: {format: "%Y/%m/%d %H:%M", date: "$created_on"}},
+                        formatedUpdated_on: {$dateToString: {format: "%Y/%m/%d %H:%M", date: "$updated_on"}}
+                    }};
+                    pipeline.push(project);
+                    let sort = {};
 
-                const searchBugs = bugDatabase.find(pipeline, project).sort(options);
-                res.send(await searchBugs.toArray());
+                    switch (sortQuery) {
+                        case 'priority':
+                            const order = ['urgent', 'medium', 'low', null];
+                            const set = {$set: {order: {$indexOfArray: [order, '$priority']}}};
+                            sort = {$sort: {order: 1}};
+                            pipeline.push(set);
+                            break;
+                        case 'recent':
+                            sort = {$sort: {created_on: -1}};                            
+                            break;
+                        case 'oldest':
+                            sort = {$sort: {created_on: 1}};
+                            break;
+                        case 'update':
+                            sort = {$sort: {updated_on: -1}};
+                            break;
+                        default:
+                            sort = {$sort: {created_on: -1}};                   
+                    }
+                    pipeline.push(sort);                
+
+                    const query = bugDatabase.aggregate(pipeline);
+                    res.send(await query.toArray());
             
-            }
-            else if (sortQuery) {                
-                const match = {$match: {user_id: user_id}};
-                let sort = {};
-                let pipeline = [];
-                switch (sortQuery) {
-                    case 'priority':
-                        const order = ['urgent', 'medium', 'low', null];
-                        const set = {$set: {order: {$indexOfArray: [order, '$priority']}}};
-                        sort = {$sort: {order: 1}};
-                        pipeline = [match, set, sort];
-                        break;
-                    case 'recent':
-                        sort = {$sort: {created_on: -1}};
-                        pipeline = [match, sort];
-                        break;
-                    case 'oldest':
-                        sort = {$sort: {created_on: 1}};
-                        pipeline = [match, sort];
-                        break;
-                    case 'update':
-                        sort = {$sort: {updated_on: -1}};
-                        pipeline = [match, sort];
-                        break;
-                    default:
-                        console.log('error on sorting');                   
-                }                
-
-                const query = bugDatabase.aggregate(pipeline);
-                res.send(await query.toArray());
             } else {
             const pipeline = [
                 {$match: {user_id: user_id}},

@@ -119,19 +119,18 @@
 
       // Post new bug issue
       $(function() {
-        $('#newBug').submit(function(e) {
+        $('#newBug').submit(function() {
           $.ajax({
             url: '/profile/api',
             type: 'post',
             data: $('#newBug').serialize(),
             success: function(data) {window.location.reload(true);}
           });
-          e.preventDefault();
         })
       })
 
       // Update bug issue data
-      $('#bugList').on('click', '.saveButton', function(e) {
+      $('#bugList').on('click', '.saveButton', function() {
         const url = '/profile/api/' + $(this).attr('id');
         $.ajax({
           url: url,
@@ -139,7 +138,6 @@
           data: $(this).parents('form').serialize(),
           success: function() {window.location.reload(true);}
         });
-        e.preventDefault(e);
       })
 
       // Search bugs
@@ -160,9 +158,13 @@
 
       // Sorting bugs
       $('.sort-option').on('click', function(e) {
-        url = url + '?sort=' + $(this).attr('name');
+        if ($('#search').val()) {
+          url = url + '?sort=' + $(this).attr('name') + '&search=' + $('#search').val();
+        } else {
+          url = url + '?sort=' + $(this).attr('name');
+        }
         $.ajax({
-          type: "GET",
+          type: 'get',
           url: url,
           success: function(data) {
             url = '/profile/api';
@@ -170,6 +172,7 @@
             return url;
           }
         })
+        e.preventDefault();
       })
 
       // GET all the submitted bugs
@@ -184,14 +187,13 @@
       })
 
       // Delete issue
-      $('#bugList').on('click', '.deleteIssue', function(e) {
+      $('#bugList').on('click', '.deleteIssue', function() {
         let url = "/profile/api/" + $(this).attr('id');
         $.ajax({
           type: "DELETE",
           url: url,
           success: function(data) {window.location.reload(true);}
-        });        
-        e.preventDefault(); 
+        }); 
       })
 
       // Show and hide sort dropdown
