@@ -9,13 +9,6 @@ module.exports = (app, userDatabase, bugDatabase) => {
             const searchQuery = req.query.search;
             const regex = /(open|close)/i;
             if (searchQuery) {
-                function checkDate(date) {                    
-                    if(date.slice(16,24) === "00:00:00") {
-                        return date.slice(0, 15);
-                    } else {
-                        return date.slice(0, 24);
-                    }
-                }
                 const pipeline = {$and: [
                     {user_id: user_id},
                     {$or: [
@@ -24,15 +17,18 @@ module.exports = (app, userDatabase, bugDatabase) => {
                         {bug_description: {$regex: searchQuery, $options: 'i'}},
                         {assigned_to: {$regex: searchQuery, $options: 'i'}},
                         {priority: {$regex: searchQuery, $options: 'i'}},
-                        {created_on: {$regex: new Date(searchQuery).toString() === 'Invalid Date' ? checkDate(new Date(searchQuery).toString()) : null, $options: 'g'}},
-                        {updated_on: {$regex: new Date(searchQuery).toString() === 'Invalid Date' ? checkDate(new Date(searchQuery).toString()) : null, $options: 'g'}},
                         {open: {$eq: !regex.test(searchQuery) ? undefined : (/open/i.test(searchQuery) ? true : false)}}
                     ]}
                     ]
                 };
-                const options = {$sort: {created_by: -1}};
+                const project = {
+                    $addFields: {
+                    formatedCreated_on: {$dateToString: {format: "%Y/%m/%d %H:%M", date: "$created_on"}},
+                    formatedUpdated_on: {$dateToString: {format: "%Y/%m/%d %H:%M", date: "$updated_on"}}
+                }};
+                const options = {created_on: -1};
 
-                const searchBugs = bugDatabase.find(pipeline, options);
+                const searchBugs = bugDatabase.find(pipeline, project).sort(options);
                 res.send(await searchBugs.toArray());
             
             }
@@ -68,9 +64,13 @@ module.exports = (app, userDatabase, bugDatabase) => {
             } else {
             const pipeline = [
                 {$match: {user_id: user_id}},
+                {$addFields: {
+                    formatedCreated_on: {$dateToString: {format: "%Y/%m/%d %H:%M", date: "$created_on"}},
+                    formatedUpdated_on: {$dateToString: {format: "%Y/%m/%d %H:%M", date: "$updated_on"}}
+                }},
                 {$sort: {created_on: -1}}
             ]
-            const query = bugDatabase.aggregate(pipeline);
+            const query = bugDatabase.aggregate(pipeline);            
             res.send(await query.toArray());
             }                                    
         })
@@ -89,8 +89,8 @@ module.exports = (app, userDatabase, bugDatabase) => {
                     bug_description: req.body.description,
                     assigned_to: req.body.assigned_to,
                     priority: req.body.priority,
-                    created_on: new Date().toString(),
-                    updated_on: new Date().toString(),
+                    created_on: new Date(),
+                    updated_on: new Date(),
                     open: true
                 }, async (err, doc) => {
                     if (err) return console.log(err)
@@ -125,7 +125,7 @@ module.exports = (app, userDatabase, bugDatabase) => {
                     bug_description: change.description,
                     priority: change.priority,
                     assigned_to: change.assigned_to,
-                    updated_on: new Date().toString(),
+                    updated_on: new Date(),
                     open: change.close ? false : true              
                 }
             };
