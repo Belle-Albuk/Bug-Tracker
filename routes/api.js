@@ -25,12 +25,6 @@ module.exports = (app, userDatabase, bugDatabase) => {
                     
                     pipeline.push(query);                    
                 }
-                    const project = {
-                        $addFields: {
-                        formatedCreated_on: {$dateToString: {format: "%Y/%m/%d %H:%M", date: "$created_on"}},
-                        formatedUpdated_on: {$dateToString: {format: "%Y/%m/%d %H:%M", date: "$updated_on"}}
-                    }};
-                    pipeline.push(project);
                     let sort = {};
 
                     switch (sortQuery) {
@@ -60,10 +54,6 @@ module.exports = (app, userDatabase, bugDatabase) => {
             } else {
             const pipeline = [
                 {$match: {user_id: user_id}},
-                {$addFields: {
-                    formatedCreated_on: {$dateToString: {format: "%Y/%m/%d %H:%M", date: "$created_on"}},
-                    formatedUpdated_on: {$dateToString: {format: "%Y/%m/%d %H:%M", date: "$updated_on"}}
-                }},
                 {$sort: {created_on: -1}}
             ]
             const query = bugDatabase.aggregate(pipeline);            
@@ -78,6 +68,7 @@ module.exports = (app, userDatabase, bugDatabase) => {
                 res.json({error:'required field(s) missing'});
             } else {
                 // Insert bug data
+                console.log('called');
                 bugDatabase.insertOne({
                     user_id: req.session.user_id,
                     created_by: req.session.username,

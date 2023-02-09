@@ -60,6 +60,27 @@
     <script>      
       let url = '/profile/api'
 
+      function dateInLocaleTime(date) {
+        let month = {
+    	    Jan: '01',
+      	  Feb: '02',
+      	  Mar: '03',
+      	  Apr: '04',
+      	  May: '05',
+      	  Jun: '06',
+      	  Jul: '07',
+      	  Aug: '08',
+      	  Sep: '09',
+      	  Oct: '10',
+      	  Nov: '11',
+      	  Dec: '12'
+        };
+        const str = new Date(date).toString();
+        let strMonth = month[str.slice(4, 7)]
+        const newStr = `${str.slice(11,15)}/${strMonth}/${str.slice(8,10)} ${str.slice(16,21)}`;
+        return newStr;
+      }
+
       function findSelectedPriority(elementPriority) {
         let arr = ['<option value="">Bug priority</option>',
         '<option value="urgent">Urgent</option>',
@@ -89,7 +110,7 @@
             '<p class="description">'+element.bug_description+'</p>',
             '<p class="'+element.priority+' priority"><b>Priority:</b> '+priority+'</p>',
             '<p class="created_by" id="'+element.created_by+'"><b>Created by:</b> '+element.created_by+'       <b>Assigned to:</b> '+element.assigned_to+'</p>',
-            '<p class="created_on" id="'+element.formatedCreated_on+'"><b>Created on:</b> '+element.formatedCreated_on+'       <b>Last updated:</b> '+element.formatedUpdated_on+'</p><br>',
+            '<p class="created_on" id="'+dateInLocaleTime(element.created_on)+'"><b>Created on:</b> '+dateInLocaleTime(element.created_on)+'       <b>Last updated:</b> '+dateInLocaleTime(element.updated_on)+'</p><br>',
             '</div>'
           ];
 
@@ -101,8 +122,8 @@
           '<div class="row g-2 align-items-center"><div class="col-auto"><label for="priority"><b>Priority:</b></label></div><div class="col-auto"><select name="priority" id="priority" class="form-select form-select-sm" aria-label=".form-select-sm example">'+findSelectedPriority(element.priority)+'</select></div></div><br>',
           '<div class="row align-items-center"><div class="col-auto"><p><b>Created by:</b></p></div><div class="col-auto"><input class="form-control" type="text" value="'+element.created_by+'" aria-label="Disabled input" disabled readonly></div>',
           '<div class="col-auto"><label for="assigned_to"><b>Assigned to:</b></label></div><div class="col-auto"><input type="text" name="assigned_to" value="'+element.assigned_to+'" class="form-control"></div></div><br>',
-          '<div class="row align-items-center"><div class="col-auto"><p><b>Created on:</b></p></div><div class="col-auto"><input class="form-control" type="text" value="'+element.formatedCreated_on+'" aria-label="Disabled input" disabled readonly></div>',
-          '<div class="col-auto"><p><b>Last updated:</b></p></div><div class="col-auto"><input class="form-control" type="text" value="'+element.formatedUpdated_on+'" aria-label="Disabled input" disabled readonly></div></div><br>',
+          '<div class="row align-items-center"><div class="col-auto"><p><b>Created on:</b></p></div><div class="col-auto"><input class="form-control" type="text" value="'+dateInLocaleTime(element.created_on)+'" aria-label="Disabled input" disabled readonly></div>',
+          '<div class="col-auto"><p><b>Last updated:</b></p></div><div class="col-auto"><input class="form-control" type="text" value="'+dateInLocaleTime(element.updated_on)+'" aria-label="Disabled input" disabled readonly></div></div><br>',
           '<div class="form-check form-switch"><input class="form-check-input" type="checkbox" name="close" id="openSwitch"'+check+'><label class="form-check-label" for="flexSwitchCheckDefault">Check to close bug issue</label></div><br>',
           '<div class="modal-footer"><div class="row justify-content-between"><div class="col-auto"><button type="button" class="btn btn-outline-danger" data-bs-target="#modalDeleteIssue-'+element._id+'" data-bs-toggle="modal" data-bs-dismiss="modal">Delete issue</button></div>',
           '<div class="col-auto"><button id="'+element._id+'" type="button" class="saveButton btn btn-primary">Save changes</button><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button></div>',
