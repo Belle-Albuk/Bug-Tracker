@@ -140,13 +140,14 @@
 
       // Post new bug issue
       $(function() {
-        $('#newBug').submit(function() {
+        $('#newBug').submit(function(e) {
           $.ajax({
             url: '/profile/api',
             type: 'post',
             data: $('#newBug').serialize(),
             success: function(data) {window.location.reload(true);}
           });
+          e.preventDefault();
         })
       })
 

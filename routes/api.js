@@ -68,7 +68,6 @@ module.exports = (app, userDatabase, bugDatabase) => {
                 res.json({error:'required field(s) missing'});
             } else {
                 // Insert bug data
-                console.log('called');
                 bugDatabase.insertOne({
                     user_id: req.session.user_id,
                     created_by: req.session.username,
