@@ -152,7 +152,7 @@
       })
 
       // Update bug issue data
-      $('#bugList').on('click', '.saveButton', function() {
+      $('#bugList').on('click', '.saveButton', function(e) {
         const url = '/profile/api/' + $(this).attr('id');
         $.ajax({
           url: url,
@@ -160,6 +160,7 @@
           data: $(this).parents('form').serialize(),
           success: function() {window.location.reload(true);}
         });
+        e.preventDefault();
       })
 
       // Search bugs
@@ -209,13 +210,14 @@
       })
 
       // Delete issue
-      $('#bugList').on('click', '.deleteIssue', function() {
+      $('#bugList').on('click', '.deleteIssue', function(e) {
         let url = "/profile/api/" + $(this).attr('id');
         $.ajax({
           type: "DELETE",
           url: url,
           success: function(data) {window.location.reload(true);}
         }); 
+        e.preventDefault();
       })
 
       // Show and hide sort dropdown

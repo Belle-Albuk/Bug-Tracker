@@ -28,8 +28,8 @@ module.exports = (app, userDatabase, bugDatabase) => {
                     let sort = {};
 
                     switch (sortQuery) {
-                        case 'priority':
-                            const order = ['urgent', 'medium', 'low', null];
+                        case 'priority':                            
+                            const order = ['urgent', 'medium', 'low', '', null, undefined];
                             const set = {$set: {order: {$indexOfArray: [order, '$priority']}}};
                             sort = {$sort: {order: 1}};
                             pipeline.push(set);
