@@ -18,8 +18,8 @@ module.exports = function(app, userDatabase) {
                 if (err) {
                     next(err);
                 } else if (user) {
-                    res.redirect('/');
-                } else {
+                    res.status(400).send({error: 'Username already taken'});
+                } else {                    
                     const hash = bcrypt.hashSync(req.body.password, 12);
                     userDatabase.insertOne({
                         username: req.body.username,

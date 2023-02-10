@@ -7,6 +7,7 @@
     <title>Bug Tracker - Sign up</title>
     <link rel="stylesheet" type="text/css" href="../public/style.css">
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
 </head>
 <body>
     <h1>Create your account</h1>
@@ -17,13 +18,38 @@
         <a href="/auth/google" class="btn-text"><b>Sign up with google</b></a>
       </div>
       <p>Or</p>
-    <form action="/account/register" method="post">
+    <form id="register-account" action="/account/register" method="post">
         <label for="username">Username:</label>
         <input type="text" id="username" name="username">
+        <div id="taken"></div>
         <label for="password">Password:</label>
         <input type="password" id="password" name="password">
         <input type="submit" value="Sign up">
-    </form>
+    </form>    
     <p>Have an account? <a href="/">Log in now</a></p>
+    <script src="https://code.jquery.com/jquery-3.6.3.js" integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script>
+      //Alert if username is already taken
+      $('#register-account').submit(function(e) {
+        console.log('submitted')
+        $.ajax({
+          url: '/account/register',
+          type: 'post',
+          data: $('#register-account').serialize(),
+          error: function(data) {
+            console.log(data.responseJSON);
+            const error = data.responseJSON['error'];
+            if (error) {
+            $('#taken').html('<p class="form-text">'+error+'</p>');
+          }
+          },
+          success: function() {
+            window.location = '/profile'
+          }
+        })
+        e.preventDefault();
+      })
+    </script>
 </body>
 </html>
