@@ -10,31 +10,69 @@
     <script src="https://kit.fontawesome.com/02fd43601a.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    <h1 id="header-title">Welcome to Bug Tracker</h1>
-    <nav id="header-nav">
-      <ul>
-        <li><a href="#submit-a-bug">Submit a Bug</a></li>
-        <li><a href="#view-bugs">View Bugs</a></li>
-      </ul>
-    </nav>
-    <h2 id="submit-a-bug">Submit a Bug</h2>
-    <form id="newBug" action="/profile/api" method="post">
-      <label for="title">Title*:</label>
-      <input type="text" id="title" name="title"><br>
-      <label for="description">Description*:</label>
-      <textarea id="description" name="description"></textarea><br>
-      <label for="assigned_to">Assigned to:</label>
-      <input type="text" id="assigned_to" name="assigned_to"><br>
-      <label for="priority">Priority:</label>
-      <select name="priority" id="priority">
-        <option value="" disabled selected>Bug priority</option>
-        <option value="urgent">Urgent</option>
-        <option value="medium">Medium</option>
-        <option value="low">Low</option>
-      </select>
-      <br>
-      <input type="submit" value="Submit">
-    </form>
+  <nav class="navbar justify-content-end bg-light">
+    <ul class="nav">
+      <li class="nav-item">
+        <a class="nav-link active" aria-current="page" href="#submit-a-bug">Submit a Bug</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#view-bugs">View Bugs</a>
+      </li>
+      <li class="nav-item">
+      <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Hello user!</a>
+     </li>  
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+               <i class="user-icon fa-solid fa-circle-user"></i>
+       </a>
+        <ul class="dropdown-menu dropdown-menu-start" aria-labelledby="navbarDropdownMenuLink">
+                <li><a class="dropdown-item" href="/account/logout">Logout</a>
+                  
+          </u>
+        </nav>
+      <div class="container">  
+       <div class="card m-auto mt-4" style="width: 50rem;">
+      <h5 class="card-header">Submit a bug</h5>
+         <form id="newBug" action="/profile/api" method="post">
+      <div class="card-body">    
+        <div class="mb-3 row g-2 align-items-center">
+          <div class="col-auto">
+          <label for="title" class="col-form-label">Title*:</label>
+            </div>
+          <div class="col-auto">
+          <input type="text" id="title" name="title" class="form-control">
+            </div>
+          </div>
+        <div class="mb-2">
+          <label for="description">Description*:</label>
+          <textarea id="description" name="description" class="form-control" rows="3"></textarea><br>
+          </div>
+        <div class="mb-3 row g-2 align-items-center">
+          <div class="col-auto">
+          <label for="assigned_to" class="col-form-label">Assigned to:</label>
+            </div>
+          <div class="col-auto">
+          <input type="text" id="assigned_to" name="assigned_to" class="form-control">
+            </div>
+          </div>
+        <div class="mb-3 row g-2 align-items-center">
+          <div class="col-auto">
+          <label for="priority" class="col-form-label">Priority:</label>
+            </div>
+          <div class="col-auto">
+          <select class="form-select" name="priority" id="priority">
+            <option value="" disabled selected>Bug priority</option>
+            <option value="urgent">Urgent</option>
+            <option value="medium">Medium</option>
+            <option value="low">Low</option>
+          </select>
+            </div>
+          </div>
+        <input type="submit" class="btn btn-primary" value="Submit">
+      </div>
+           </form>
+    </div>
+      </div>
     <div id="view-bugs">      
     <h2>View Bugs</h2>
     <div id="find-sort">

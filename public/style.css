@@ -40,32 +40,13 @@ body {
   color: #000;
 }
 
-#newBug {
-  width: 50%;
-  margin: 20px auto;
-  text-align: center;
+.user-icon{
+  font-size: 2.5rem;
+  color: gray;
 }
 
-#newBug label {
-  display: block;
-  margin-bottom: 10px;
-}
-
-#newBug input[type="text"], textarea {
-  width: 100%;
-  padding: 12px 20px;
-  margin: 8px 0;
-  box-sizing: border-box;
-  border: 1px solid #ccc;
-}
-
-#newBug input[type="submit"] {
-  background-color: #4CAF50;
-  color: white;
-  padding: 14px 20px;
-  margin: 8px 0;
-  border: none;
-  cursor: pointer;
+nav .dropdown-menu {
+  min-width:inherit;
 }
 
     #view-bugs {
@@ -185,12 +166,3 @@ body {
     }
   }
   
-  /* Desktops */
-  @media screen and (min-width: 769px) {
-    #newBug {
-      width: 50%;
-    }
-    #bug-list {
-      width: 50%;
-    }
-  }
