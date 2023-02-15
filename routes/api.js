@@ -93,16 +93,16 @@ module.exports = (app, userDatabase, bugDatabase) => {
 
     // Find one bug issue
     app.route('/profile/api/user')
-    .get(async (req, res) => {
-        const _id = req.session.user_id;
-        const projection = {
-            $or : [
-                {username: 1},
-                {name: 1}
-            ]
-        }
-        res.send(await userDatabase.findOne({_id: new ObjectId(_id)}, projection));
-    })
+        .get(async (req, res) => {
+            const _id = req.session.user_id;
+            const projection = {
+                $or : [
+                    {username: 1},
+                    {name: 1}
+                ]
+            }
+            res.send(await userDatabase.findOne({_id: new ObjectId(_id)}, projection));
+        })
 
     // Update bug issue
     app.route('/profile/api/:id')

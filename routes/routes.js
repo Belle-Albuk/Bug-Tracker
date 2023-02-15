@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 
 module.exports = function(app, userDatabase) {
     // Log in if account is authenticated
-        app.route('/account/login').post(passport.authenticate('local', {failureRedirect: '/'}), 
+    app.route('/account/login').post(passport.authenticate('local', {failureRedirect: '/'}), 
         (req, res) => {
             req.session.user_id = req.user._id;
             req.session.username = req.user.username;
