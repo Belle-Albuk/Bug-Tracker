@@ -63,10 +63,7 @@ module.exports = (app, userDatabase, bugDatabase) => {
 
     // POST method
     app.route('/profile/api')
-        .post((req, res) => {
-            if (!req.body.title || !req.body.description) {
-                res.json({error:'required field(s) missing'});
-            } else {
+        .post((req, res) => {          
                 // Insert bug data
                 bugDatabase.insertOne({
                     user_id: req.session.user_id,
@@ -86,9 +83,7 @@ module.exports = (app, userDatabase, bugDatabase) => {
                     ];
                     const query = bugDatabase.aggregate(pipeline);
                     await query.forEach(data => res.json(data));
-                })
-            }
-
+                })            
         })
 
     // Find one bug issue

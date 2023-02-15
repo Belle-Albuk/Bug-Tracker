@@ -198,9 +198,7 @@
           if(!this.checkValidity()) {
             e.preventDefault()
             e.stopPropagation()
-          }
-          $('.check-validation').addClass('was-validated');
-
+          } else {
           // Send data to server
           $.ajax({
             url: '/profile/api',
@@ -209,7 +207,9 @@
             success: function(data) {window.location.reload(true);}
           });
           e.preventDefault();
-        })
+          }
+          $('.check-validation').addClass('was-validated');
+        })    
       })
 
       // Update bug issue data
