@@ -33,19 +33,22 @@
       <div class="container">  
        <div class="card m-auto mt-4" style="width: 50rem;">
       <h5 class="card-header">Submit a bug</h5>
-         <form id="newBug" action="/profile/api" method="post">
+         <form id="newBug" class="check-validation" novalidate>
       <div class="card-body">    
-        <div class="mb-3 row g-2 align-items-center">
+        <div class="row g-2 align-items-center">
           <div class="col-auto">
           <label for="title" class="col-form-label">Title*:</label>
             </div>
           <div class="col-auto">
-          <input type="text" id="title" name="title" class="form-control">
-            </div>
+          <input type="text" id="title" name="title" class="form-control" required>
+          <div class="invalid-feedback"></div>
+            </div>            
           </div>
+          
         <div class="mb-2">
           <label for="description">Description*:</label>
-          <textarea id="description" name="description" class="form-control" rows="3"></textarea><br>
+          <textarea id="description" name="description" class="form-control" rows="3" required></textarea><br>
+          <div class="invalid-feedback"></div>
           </div>
         <div class="mb-3 row g-2 align-items-center">
           <div class="col-auto">
@@ -184,14 +187,21 @@
             (data.username) ? user = data.username : user = data.name;
             $('#greeting-text').text(`Hello ${user}!`);
            }
-        })
-        
+        })        
         }
       )
 
-      // Post new bug issue
+      // Submit new bug issue
       $(function() {
         $('#newBug').submit(function(e) {
+          // First check form valididation
+          if(!this.checkValidity()) {
+            e.preventDefault()
+            e.stopPropagation()
+          }
+          $('.check-validation').addClass('was-validated');
+
+          // Send data to server
           $.ajax({
             url: '/profile/api',
             type: 'post',
