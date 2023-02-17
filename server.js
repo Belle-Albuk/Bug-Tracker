@@ -10,6 +10,11 @@ const auth = require('./auth');
 const routes = require('./routes/routes');
 const api = require('./routes/api');
 
+const Mocha = require('mocha');
+
+// Create a new mocha instance and add the test file
+const mocha = new Mocha().addFile('./tests/functional-tests.js');
+
 app.use('/public', express.static(process.cwd() + '/public'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -76,6 +81,17 @@ myDB(async client => {
             .type('text')
             .send('Not Found');
     });
+
+    if (process.env.NODE_ENV === 'testing') {        
+        setTimeout(function () {
+            try {
+                mocha.ui('tdd').run();
+            } catch(e) {
+              console.log('Tests are not valid:');
+              console.error(e);
+            }
+          }, 3500);
+    }  
 }).catch(e => {
     app.route('/').get((req, res) => {
         res.render('Unable to connect to the Database')
@@ -85,5 +101,10 @@ myDB(async client => {
 
     
 const listener = app.listen(process.env.PORT || 3000, function () {
-    console.log('Your app is listening on port ' + listener.address().port)
+    console.log('Your app is listening on port ' + listener.address().port);
+    if (process.env.NODE_ENV === 'testing') {
+        console.log('Running tests...');
+    }    
 });
+
+module.exports = app; // for testing
