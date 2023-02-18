@@ -5,6 +5,8 @@ const should = chai.should();
 const server = require('../server');
 
 chai.use(chaiHttp);
+const agent = chai.request.agent(server);
+let issueId;
 
 suite('Functional Tests', function () {
 
@@ -43,7 +45,6 @@ suite('Functional Tests', function () {
     })
 
     test('GET method on /profile/api should return an array', function() {
-        const agent = chai.request.agent(server);
         agent
             .post('/account/login')
             .type('form')
@@ -52,8 +53,34 @@ suite('Functional Tests', function () {
                 await agent.get('/profile/api')
                             .then(function(res) {
                                 assert.isArray(res.body, 'res.body should be an array');
-                                agent.close();
+                                
                             }).catch((err) => console.log(err))
             }).catch((err) => console.log(err))
     });
+
+    test('POST method on /profile/api should return an object that contains the data that was sent', function() {
+        agent
+            .post('/account/login')
+            .type('form')
+            .send({username: 'userTest', password: '123'})
+            .then(async function(res) {
+                await agent.post('/profile/api')
+                            .send({
+                                title: 'testing-Title',
+                                description: 'testing text',
+                                assigned_to: 'testingUser',
+                                priority: 'low'})
+                            .then(function(res) {
+                                issueId = res.body._id;
+                                assert.include(res.body, {
+                                created_by: 'userTest',
+                                bug_title: 'testing-Title',
+                                bug_description: 'testing text',
+                                assigned_to: 'testingUser',
+                                priority: 'low',
+                                open: true}, 'res.body contains the sent properties + open is true');
+                                agent.close();                                
+                            }).catch((err) => console.log(err))
+            }).catch((err) => console.log(err))
+    })
 });
