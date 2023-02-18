@@ -1,6 +1,6 @@
 const chaiHttp = require('chai-http');
 const chai = require('chai');
-const assert = require('assert');
+const assert = chai.assert;
 const should = chai.should();
 const server = require('../server');
 
@@ -18,7 +18,7 @@ suite('Functional Tests', function () {
         })
     });
 
-    test('logging in with invalid user should be redirected to the homepage', function(done) {
+    test('logging in with invalid user should redirect to the homepage', function(done) {
         chai
             .request(server)
             .post('/account/login')
@@ -41,4 +41,19 @@ suite('Functional Tests', function () {
                 done();
             })
     })
+
+    test('GET method on /profile/api should return an array', function() {
+        const agent = chai.request.agent(server);
+        agent
+            .post('/account/login')
+            .type('form')
+            .send({username: 'userTest', password: '123'})
+            .then(async function(res) {
+                await agent.get('/profile/api')
+                            .then(function(res) {
+                                assert.isArray(res.body, 'res.body should be an array');
+                                agent.close();
+                            }).catch((err) => console.log(err))
+            }).catch((err) => console.log(err))
+    });
 });
