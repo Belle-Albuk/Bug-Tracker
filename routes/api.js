@@ -26,12 +26,15 @@ module.exports = (app, userDatabase, bugDatabase) => {
                     pipeline.push(query);                    
                 }
                     let sort = {};
+                    const openOrder = [true, false];
+                    const setOrder = {$set: {openOrder: {$indexOfArray: [openOrder, '$open']}}};
+                    pipeline.push(setOrder);                    
 
                     switch (sortQuery) {
                         case 'priority':                            
                             const order = ['urgent', 'medium', 'low', '', null, undefined];
                             const set = {$set: {order: {$indexOfArray: [order, '$priority']}}};
-                            sort = {$sort: {order: 1}};
+                            sort = {$sort: {openOrder: 1, order: 1}};
                             pipeline.push(set);
                             break;
                         case 'recent':
@@ -44,7 +47,7 @@ module.exports = (app, userDatabase, bugDatabase) => {
                             sort = {$sort: {updated_on: -1}};
                             break;
                         default:
-                            sort = {$sort: {created_on: -1}};                   
+                            sort = {$sort: {openOrder: 1, created_on: -1}};                   
                     }
                     pipeline.push(sort);                
 
