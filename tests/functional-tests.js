@@ -83,7 +83,13 @@ suite('Functional Tests', function () {
             })
             .then(async function (res) {
                 await agent.put('/profile/api/' + issueId)
-                    .send({ close: false })
+                    .send({
+                        title: 'updated title',
+                        description: 'updated description',
+                        assigned_to: 'updated user',
+                        priority: 'urgent',
+                        close: true
+                    })
                     .then(function (res) {
                         assert.equal(res.body.result, 'successfully updated');
                         assert.equal(res.body._id, issueId);
